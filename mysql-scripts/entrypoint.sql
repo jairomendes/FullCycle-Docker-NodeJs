@@ -1,0 +1,6 @@
+CREATE DATABASE IF NOT EXISTS fullcycle;
+USE fullcycle;
+
+CREATE TABLE IF NOT EXISTS people (
+    name VARCHAR(255)
+);

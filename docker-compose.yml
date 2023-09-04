@@ -1,0 +1,46 @@
+version: '3.1'
+
+services:
+  app:
+    build:
+      context: .
+    volumes:
+      - ./:/home/node/app
+    restart: always
+    ports:
+      - "8090:8090"
+    depends_on:
+      - db
+    networks:
+      - default
+
+  webserver:
+    image: nginx:mainline-alpine
+    container_name: webserver
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx-conf:/etc/nginx/conf.d
+    networks:
+      - default
+
+  db:
+    image: mysql
+    command: mysqld --user=root
+    volumes:
+      - ./db_data:/var/lib/mysql
+      - ./mysql-scripts:/docker-entrypoint-initdb.d
+    restart: always
+    environment:
+      MYSQL_DATABASE: fullcycle
+      MYSQL_USER: fullcycle
+      MYSQL_PASSWORD: fullcycle
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "33660:3306"
+    networks:
+      - default
+
+networks:
+  default:
